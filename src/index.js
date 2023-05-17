@@ -1,6 +1,7 @@
 const express = require('express');
-const readFile = require('./utils/readFile');
+// const readFile = require('./utils/readFile');
 const loginRouter = require('./routers/loginRouter');
+const talkerRouter = require('./routers/talkerRouter');
 // const generateToken = require('./utils/generateToken');
 // const { validateEmail, validatePassword } = require('./middlewares/validateLogin');
 
@@ -15,29 +16,31 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-// GET
-app.get('/talker', async (req, res) => {
-  const talkers = await readFile();
-  res.status(200).json(talkers);
-});
+app.use('/talker', talkerRouter);
 
-// GET BY ID
-app.get('/talker/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const talkers = await readFile();
-    const talkerFound = talkers.find((talker) => talker.id === Number(id));
+// // GET
+// app.get('/talker', async (req, res) => {
+//   const talkers = await readFile();
+//   res.status(200).json(talkers);
+// });
 
-    if (talkerFound) {
-      res.status(200).json(talkerFound);    
-    } else {
-      res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
-  }
-});
+// // GET BY ID
+// app.get('/talker/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const talkers = await readFile();
+//     const talkerFound = talkers.find((talker) => talker.id === Number(id));
+
+//     if (talkerFound) {
+//       res.status(200).json(talkerFound);    
+//     } else {
+//       res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// });
 
 app.use('/login', loginRouter);
 
