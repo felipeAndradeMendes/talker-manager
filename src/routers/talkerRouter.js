@@ -1,5 +1,12 @@
 const express = require('express');
 const readFile = require('../utils/readFile');
+const writeFileFunction = require('../utils/writeFile');
+const auth = require('../middlewares/auth');
+const {
+  validateName,
+  validateAge,
+  validateTalk,
+} = require('../middlewares/validateTalker');
 
 const router = express.Router();
 
@@ -24,6 +31,18 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
+  }
+});
+
+router.use(auth);
+// POST TALKER
+// Ver se authenticação está sendo feita corretamente
+router.post('/', validateName, validateAge, validateTalk, async (req, res) => {  
+  try {
+    const postNewTalker = await writeFileFunction(req.body);
+    res.status(201).json(postNewTalker);
+  } catch (error) {
+    res.status(500).json({ message: error.message });    
   }
 });
 
