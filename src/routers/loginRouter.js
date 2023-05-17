@@ -1,7 +1,7 @@
-const app = require('../index');
 const express = require('express');
-const router = express.Router();
 const generateToken = require('../utils/generateToken');
+
+const router = express.Router();
 const { validateEmail, validatePassword } = require('../middlewares/validateLogin');
 
 // POST
