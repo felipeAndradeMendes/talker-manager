@@ -1,6 +1,6 @@
 const express = require('express');
-
 const readFile = require('./utils/readFile');
+const generateToken = require('./utils/generateToken');
 
 const app = express();
 app.use(express.json());
@@ -13,11 +13,13 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// GET
 app.get('/talker', async (req, res) => {
   const talkers = await readFile();
   res.status(200).json(talkers);
 });
 
+// GET BY ID
 app.get('/talker/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -33,6 +35,13 @@ app.get('/talker/:id', async (req, res) => {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
+});
+
+// POST
+app.post('/login', (req, res) => {
+  // const { email, password } = req.body;
+  const token = generateToken();
+  res.status(200).json({ token });
 });
 
 app.listen(PORT, () => {
