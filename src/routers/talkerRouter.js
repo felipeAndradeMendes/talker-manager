@@ -83,4 +83,18 @@ validateName,
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const talkers = await readFile();
+    const updatedTalkers = talkers.filter((talker) => talker.id !== Number(id));
+    await writeFileFunction(updatedTalkers);
+    
+    res.status(204).end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+});
+
 module.exports = router;
