@@ -18,6 +18,20 @@ router.get('/', async (req, res) => {
   res.status(200).json(talkers);
 });
 
+router.get('/search', auth, async (req, res) => {
+  try {
+    const { q } = req.query;
+    const talkers = await readFile();
+
+    const filteredTalkers = talkers
+      .filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
+    res.status(200).json(filteredTalkers);  
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+});
+
 // GET BY ID
 router.get('/:id', async (req, res) => {
   try {
