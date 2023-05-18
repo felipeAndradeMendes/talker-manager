@@ -1,19 +1,18 @@
 const fs = require('fs').promises;
-const readFile  = require('./readFile');
-
 const path = require('path');
+const readFile = require('./readFile');
 
 const writeFileFunction = async (newTalker) => {
+  // const { name, age, talk } = newTalker;
   try {
     const talkers = await readFile();
-    console.log(talkers);
-    const talkersUpdated = JSON.stringify([...talkers, {
-      id: talkers[talkers.length -1].id + 1, ...newTalker
-    }]);
+
+    const talkersUpdated = [...talkers, {
+    ...newTalker,
+    }];
+
     const talkersUpdatedStringified = JSON.stringify(talkersUpdated);
-    // console.log('TALKERS STRINGIFIED', talkersUpdated)
     await fs.writeFile(path.resolve(__dirname, '../talker.json'), talkersUpdatedStringified);
-    // console.log('Arquivo escrito com sucesso!');
   } catch (error) {
     console.error(`Erro ao escrever o arquivo do writeFunc: ${error.message}`);
   }

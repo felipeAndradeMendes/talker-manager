@@ -6,6 +6,8 @@ const {
   validateName,
   validateAge,
   validateTalk,
+  validateTalkRate,
+  validateTalkRateInt,
 } = require('../middlewares/validateTalker');
 
 const router = express.Router();
@@ -37,10 +39,20 @@ router.get('/:id', async (req, res) => {
 router.use(auth);
 // POST TALKER
 // Ver se authenticação está sendo feita corretamente
-router.post('/', validateName, validateAge, validateTalk, async (req, res) => {  
+router.post('/', 
+  validateName, 
+  validateAge, 
+  validateTalk, 
+  validateTalkRate, 
+  validateTalkRateInt, async (req, res) => {  
   try {
-    const postNewTalker = await writeFileFunction(req.body);
-    res.status(201).json(postNewTalker);
+    const talkers = await readFile();
+    console.log(talkers);
+
+    const newTalker = req.body;
+    const newTalkerWithId = { id: talkers[talkers.length - 1].id + 1, ...newTalker };
+    await writeFileFunction(newTalkerWithId);
+    res.status(201).json(newTalkerWithId);
   } catch (error) {
     res.status(500).json({ message: error.message });    
   }
