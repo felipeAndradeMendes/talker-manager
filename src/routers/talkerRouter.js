@@ -37,8 +37,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.use(auth);
-// POST TALKER
-// Ver se authenticação está sendo feita corretamente
+
 router.post('/', 
   validateName, 
   validateAge, 
@@ -47,14 +46,40 @@ router.post('/',
   validateTalkRateInt, async (req, res) => {  
   try {
     const talkers = await readFile();
-    console.log(talkers);
-
+    
     const newTalker = req.body;
     const newTalkerWithId = { id: talkers[talkers.length - 1].id + 1, ...newTalker };
-    await writeFileFunction(newTalkerWithId);
+    const talkersUpdated = [...talkers, {
+    ...newTalkerWithId,
+    }];
+    await writeFileFunction(talkersUpdated);
     res.status(201).json(newTalkerWithId);
   } catch (error) {
     res.status(500).json({ message: error.message });    
+  }
+});
+
+router.put('/:id', 
+validateName, 
+  validateAge, 
+  validateTalk, 
+  validateTalkRate, 
+  validateTalkRateInt, async (req, res) => {
+  try {
+    const talkers = await readFile();
+    const { id } = req.params;
+    const index = talkers.findIndex((talker) => talker.id === Number(id));
+    if (index === -1) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+    const updatedTalker = { id: Number(id), ...req.body };
+
+    talkers[index] = updatedTalker;
+    await writeFileFunction(talkers);
+    res.status(200).json(updatedTalker);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error.message);
   }
 });
 
