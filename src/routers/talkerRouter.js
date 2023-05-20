@@ -8,6 +8,8 @@ const {
   validateTalk,
   validateTalkRate,
   validateTalkRateInt,
+  validateRate,
+  validateRateInt,
 } = require('../middlewares/validateTalker');
 const {
   validateSearchTalkRate, validateSearchDate,
@@ -43,26 +45,6 @@ router.get('/search', auth,
     res.status(500).json(error.message);
   }
 });
-
-// router.get('/search', async (req, res, next) => {
-//   const queries = req.query;
-//   const talkers = await readFile();
-
-//   const filteredTalkers = talkers.filter(talker => {
-//     let isValid = true;
-
-//     // for (query in queries) {
-//     //   console.log(query, talker[query], queries[query]);
-//     //   isValid = isValid && user[key] === filters[key];
-//     // }
-//     isValid = req.query.q ? talkers.name.toLowerCase().includes(req.query.q.toLowerCase()) : ''
-//       && req.query.rate ? talkers.talk.rate === req.query.rate : 
-
-//     return isValid;
-//   });
-
-//   res.status(200).json(filteredUsers);
-// });
 
 // GET BY ID
 router.get('/:id', async (req, res) => {
@@ -137,6 +119,23 @@ router.delete('/:id', async (req, res) => {
     await writeFileFunction(updatedTalkers);
     
     res.status(204).end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+});
+
+router.patch('/rate/:id', validateRate, validateRateInt, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const talkers = await readFile();
+    console.log('RATE:', req.body.rate);
+
+    const index = talkers.findIndex((talker) => talker.id === Number(id));
+    talkers[index].talk.rate = req.body.rate;
+
+    await writeFileFunction(talkers);    
+    res.status(204).end();    
   } catch (error) {
     console.log(error);
     res.status(500).json(error.message);

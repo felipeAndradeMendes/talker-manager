@@ -1,3 +1,5 @@
+const ERROR_MSG_NUMBER_1_5 = 'O campo "rate" deve ser um número inteiro entre 1 e 5';
+
 const validateName = (req, res, next) => {
   const { name } = req.body;
   if (!name) {
@@ -55,18 +57,18 @@ const validateTalkRate = (req, res, next) => {
   const { talk } = req.body;
   if (parseInt(talk.rate, 10) < 1) {
     return res.status(400)
-      .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
+      .json({ message: ERROR_MSG_NUMBER_1_5 });
   }
   if (!talk.rate) {
     return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
   }
   if (talk.rate === 0) {
     return res.status(400)
-      .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
+      .json({ message: ERROR_MSG_NUMBER_1_5 });
   }
   if (parseInt(talk.rate, 10) > 5) {
     return res.status(400)
-      .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
+      .json({ message: ERROR_MSG_NUMBER_1_5 });
   }
   
   next();
@@ -77,7 +79,34 @@ const validateTalkRateInt = (req, res, next) => {
 
   if (!Number.isInteger(talk.rate)) {
     return res.status(400)
-      .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
+      .json({ message: ERROR_MSG_NUMBER_1_5 });
+  }
+  next();
+};
+
+const validateRate = (req, res, next) => {
+  const { rate } = req.body;
+  console.log('RATE:', req.body);
+
+  if (!rate && rate !== 0) { 
+    return res.status(400)
+    .json({ message: 'O campo "rate" é obrigatório' });
+  }
+
+  const numRate = Number(rate);
+  if (numRate < 1 || numRate > 5) {
+    return res.status(400)
+    .json({ message: ERROR_MSG_NUMBER_1_5 });
+  }
+  next();
+};
+
+const validateRateInt = (req, res, next) => {
+  const { rate } = req.body;
+
+  if (!Number.isInteger(rate)) {
+    return res.status(400)
+      .json({ message: ERROR_MSG_NUMBER_1_5 });
   }
   next();
 };
@@ -88,4 +117,6 @@ module.exports = {
   validateTalk,
   validateTalkRate,
   validateTalkRateInt,
+  validateRate,
+  validateRateInt,
 };
