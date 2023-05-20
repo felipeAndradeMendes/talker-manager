@@ -10,7 +10,7 @@ const {
   validateTalkRateInt,
 } = require('../middlewares/validateTalker');
 const {
-  validateSearchTalkRate,
+  validateSearchTalkRate, validateSearchDate,
 } = require('../middlewares/validateSearch');
 
 const router = express.Router();
@@ -21,12 +21,11 @@ router.get('/', async (req, res) => {
   res.status(200).json(talkers);
 });
 
-router.get('/search', 
-  auth, 
+router.get('/search', auth, 
+  validateSearchDate,
   validateSearchTalkRate,
   async (req, res) => {
   try {
-    console.log('REQ QUERY:', req.query);
     const talkers = await readFile();
     let filteredTalkers = talkers;
     if (req.query.q) {
@@ -34,13 +33,13 @@ router.get('/search',
         .filter((talker) => talker.name.toLowerCase().includes(req.query.q.toLowerCase()));
     }
     if (req.query.rate) {
-      const newFilter = filteredTalkers.filter((item) => item.talk.rate === Number(req.query.rate));
-      filteredTalkers = newFilter;
+      filteredTalkers = filteredTalkers.filter((item) => item.talk.rate === Number(req.query.rate));
     }
-
+    if (req.query.date) {
+      filteredTalkers = filteredTalkers.filter((item) => item.talk.watchedAt === req.query.date);
+    }
     res.status(200).json(filteredTalkers);  
   } catch (error) {
-    console.log(error);
     res.status(500).json(error.message);
   }
 });
