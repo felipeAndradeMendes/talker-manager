@@ -86,7 +86,7 @@ const validateTalkRateInt = (req, res, next) => {
 
 const validateRate = (req, res, next) => {
   const { rate } = req.body;
-  console.log('RATE:', req.body);
+  // console.log('RATE:', req.body);
 
   if (!rate && rate !== 0) { 
     return res.status(400)

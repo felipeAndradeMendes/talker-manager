@@ -2,6 +2,7 @@ const express = require('express');
 const readFile = require('../utils/readFile');
 const writeFileFunction = require('../utils/writeFile');
 const auth = require('../middlewares/auth');
+const findAll = require('../db/talkerDb');
 const {
   validateName,
   validateAge,
@@ -21,6 +22,17 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   const talkers = await readFile();
   res.status(200).json(talkers);
+});
+
+router.get('/db', async (req, res) => {
+  try {
+    const result = await findAll();
+    console.log('RESULT:', result);
+    res.status(200).json(result);    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error.message);
+  }
 });
 
 router.get('/search', auth, 
