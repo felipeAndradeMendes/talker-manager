@@ -21,8 +21,8 @@ app.use('/login', loginRouter);
 app.listen(PORT, async () => {
   console.log('Online');
 
-  const [result] = await connection.execute('SELECT 1');
-  if (result) {
-    console.log('MySQL connection OK');
-  }
+  // const [result] = await connection.execute('SELECT 1');
+  // if (result) {
+  //   console.log('MySQL connection OK');
+  // }
 });
