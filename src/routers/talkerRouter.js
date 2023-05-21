@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
 router.get('/db', async (req, res) => {
   try {
     const result = await findAll();
-    console.log('RESULT:', result);
+    // console.log('RESULT:', result);
     res.status(200).json(result);    
   } catch (error) {
     console.log(error);
@@ -141,7 +141,7 @@ router.patch('/rate/:id', validateRate, validateRateInt, async (req, res) => {
   try {
     const { id } = req.params;
     const talkers = await readFile();
-    console.log('RATE:', req.body.rate);
+    // console.log('RATE:', req.body.rate);
 
     const index = talkers.findIndex((talker) => talker.id === Number(id));
     talkers[index].talk.rate = req.body.rate;

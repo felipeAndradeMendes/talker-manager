@@ -23,7 +23,6 @@ const findAll = async () => {
       },
     }));
   return newResult;
-  // return result;
 };
 
 module.exports = findAll;
