@@ -34,7 +34,7 @@ router.get('/db', async (req, res) => {
     res.status(500).json(error.message);
   }
 });
-//
+
 router.get('/search', auth, 
   validateSearchDate,
   validateSearchTalkRate,
