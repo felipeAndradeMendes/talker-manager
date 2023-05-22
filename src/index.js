@@ -1,7 +1,7 @@
 const express = require('express');
 const loginRouter = require('./routers/loginRouter');
 const talkerRouter = require('./routers/talkerRouter');
-// const connection = require('./db/connection');
+// require('dotenv').config();
 
 const app = express();
 app.use(express.json());
